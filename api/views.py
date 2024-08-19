@@ -1,5 +1,10 @@
 from django.shortcuts import render
-from api.serializer import Class_PeriodSerializer, CourseSerializer, ClassroomSerializer, StudentSerializer, TeacherSerializer,MinimalStudentSerializer
+from api.serializer import (
+    Class_PeriodSerializer, CourseSerializer, ClassroomSerializer, 
+    StudentSerializer, TeacherSerializer, MinimalStudentSerializer, 
+    CourseMinimalSerializer, TeacherMinimalSerializer, 
+    ClassroomMinimalSerializer, ClassPeriodMinimalSerializer
+)
 from classperiod.models import Class_Period
 from classroom.models import Classroom
 from course.models import Courses
@@ -8,7 +13,6 @@ from student.models import Student
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from teacher.models import Teacher
-# Create your views here.
 
 class StudentListViews(APIView):
     def get(self, request):
@@ -16,58 +20,66 @@ class StudentListViews(APIView):
         serializer= MinimalStudentSerializer(students,many=True)
         return Response(serializer.data)
 
+
 class TeacherListViews(APIView):
     def get(self, request):
         teacher = Teacher.objects.all()
-        serializer = TeacherSerializer(teacher, many=True)
+        serializer = TeacherMinimalSerializer(teacher, many=True)
         return Response(serializer.data)
+    
     def post(self, request):
-        serializer = TeacherSerializer(data=request.data)
+        serializer = TeacherMinimalSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data)
+    
+    
 class CourseListViews(APIView):
     def get(self, request):
         course = Courses.objects.all()
-        serializer = CourseSerializer(course, many=True)
+        serializer = CourseMinimalSerializer(course, many=True)
         return Response(serializer.data)
+    
     def post(self, request):
-        serializer = CourseSerializer(data=request.data)
+        serializer = CourseMinimalSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data)
+       
 class ClassroomListViews(APIView):
     def get(self, request):
         classroom = Classroom.objects.all()
-        serializer = ClassroomSerializer(classroom, many=True)
+        serializer = ClassroomMinimalSerializer(classroom, many=True)
         return Response(serializer.data)
+    
     def post(self, request):
-        serializer = ClassroomSerializer(data=request.data)
+        serializer = ClassroomMinimalSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data)
+       
+       
 class Class_PeriodListViews(APIView):
     def get(self, request):
         class_period = Class_Period.objects.all()
-        serializer = Class_PeriodSerializer(class_period, many=True)
+        serializer = ClassPeriodMinimalSerializer(class_period, many=True)
         return Response(serializer.data)
+    
     def post(self, request):
-        serializer = Class_PeriodSerializer(data=request.data)
+        serializer = ClassPeriodMinimalSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.data) 
+        
+        
 class StudentDetailView(APIView):
     def get(self, request, id):
         student = Student.objects.get(id = id)
