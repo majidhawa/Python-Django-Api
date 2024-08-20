@@ -9,7 +9,7 @@ class Courses(models.Model):
     end_date = models.DateField()
     enrolment_capacity = models.PositiveSmallIntegerField()
     department_id = models.IntegerField()
-    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, related_name='courses')  # Added teacher reference
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, related_name='courses')  
 
     def __str__(self):
         return f"{self.course_name} {self.course_code}"
